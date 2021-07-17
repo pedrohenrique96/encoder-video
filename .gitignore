@@ -1,3 +1,7 @@
 .env
 
 .pgdata
+
+bucket-credential.json
+
+tmp/!.gitleep
