@@ -12,6 +12,7 @@ import (
 	"cloud.google.com/go/storage"
 )
 
+
 type VideoService struct {
 	Video *domain.Video
 	VideoRepository repositories.VideoRepository
@@ -90,6 +91,54 @@ func (v *VideoService) Fragment() error {
 	printOutPut(output)
 
 	return nil
+}
+
+func (v *VideoService) Encode() error {
+	cmdArgs := []string{}
+	cmdArgs = append(cmdArgs, os.Getenv("localStoragePath") + "/" + v.Video.ID + ".frag")
+	cmdArgs = append(cmdArgs, "--use-segment-timeline")
+	cmdArgs = append(cmdArgs, "-o")
+	cmdArgs = append(cmdArgs, os.Getenv("localStoragePath") + "/" + v.Video.ID + ".frag")
+	cmdArgs = append(cmdArgs, "-f")
+	cmdArgs = append(cmdArgs, "--exec-dir")
+	cmdArgs = append(cmdArgs, "/opt/bento4/bin/")
+
+	cmd := exec.Command("mp4dash", cmdArgs...)
+
+
+	output, err := cmd.CombinedOutput()
+
+	if err != nil {
+		return err
+	}
+	printOutPut(output)
+
+	return nil
+}
+
+func (v *VideoService) Finish() error {
+	err := os.Remove(os.Getenv("localStoragePath") + "/" + v.Video.ID + ".mp4")
+
+	if err != nil {
+		return err
+	}
+
+	err = os.Remove(os.Getenv("localStoragePath") + "/" + v.Video.ID + ".frag")
+
+	if err != nil {
+		return err
+	}
+	
+	err = os.RemoveAll(os.Getenv("localStoragePath") + "/" + v.Video.ID)
+
+	if err != nil {
+		return err
+	}
+
+	log.Println("files have been removed:" + v.Video.ID)
+
+	return nil
+
 }
 
 func printOutPut(out []byte) {
