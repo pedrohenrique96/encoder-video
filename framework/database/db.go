@@ -25,15 +25,14 @@ func NewDb() *Database {
 }
 
 func NewDbTest() *gorm.DB {
-	dbInstace := NewDb()
+	dbInstance := NewDb()
+	dbInstance.Env = "test"
+	dbInstance.DbTypeTest = "sqlite3"
+	dbInstance.DsnTest = ":memory:"
+	dbInstance.AutoMigrateDb = true
+	dbInstance.Debug = true
 
-	dbInstace.Env = "test"
-	dbInstace.DbTypeTest = "sqlite3"
-	dbInstace.DsnTest = ":memory:"
-	dbInstace.AutoMigrateDb = true
-	dbInstace.Debug = true
-
-	connection, err := dbInstace.Connect()
+	connection, err := dbInstance.Connect()
 
 	if err != nil {
 		log.Fatalf("Test db error: %v", err)
@@ -43,6 +42,7 @@ func NewDbTest() *gorm.DB {
 }
 
 func (d *Database) Connect() (*gorm.DB, error) {
+
 	var err error
 
 	if d.Env != "test" {
@@ -65,4 +65,5 @@ func (d *Database) Connect() (*gorm.DB, error) {
 	}
 
 	return d.Db, nil
+
 }

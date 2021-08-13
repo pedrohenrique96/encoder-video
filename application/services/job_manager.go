@@ -42,10 +42,9 @@ func (j *JobManager) Start(ch *amqp.Channel) {
 	videoService.VideoRepository = repositories.VideoRepositoryDb{Db: j.Db}
 
 
-	jobService := JobService{
-		JobRepository: repositories.JobRepositoryDb{Db: j.Db},
-		VideoService:  videoService,
-	}
+	jobService := NewJobService()
+	jobService.JobRepository = repositories.JobRepositoryDb{Db: j.Db}
+	jobService.VideoService = videoService
 
 	concurrency, err := strconv.Atoi(os.Getenv("CONCURRENCY_WORKERS"))
 
@@ -130,8 +129,8 @@ func (j *JobManager) notify(jobJson []byte) error {
 	err := j.RabbitMQ.Notify(
 		string(jobJson),
 		"application/json",
-		os.Getenv("RABBITMQ_NOTIFICATION_EX"),
-		os.Getenv("RABBITMQ_NOTIFICATION_ROUTING_KEY"),
+		os.Getenv("NOTIFICATION_EX"),
+		os.Getenv("NOTIFICATION_ROUTING_KEY"),
 	)
 
 	if err != nil {

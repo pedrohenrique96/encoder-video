@@ -18,13 +18,15 @@ type VideoRepositoryDb struct {
 }
 
 func NewVideoRepository(db *gorm.DB) *VideoRepositoryDb {
-	return &VideoRepositoryDb{}
+	return &VideoRepositoryDb{Db: db}
 }
 
 func (repo VideoRepositoryDb) Insert(video *domain.Video) (*domain.Video, error) {
+
 	if video.ID == "" {
 		video.ID = uuid.NewV4().String()
 	}
+
 	err := repo.Db.Create(video).Error
 
 	if err != nil {
@@ -36,13 +38,14 @@ func (repo VideoRepositoryDb) Insert(video *domain.Video) (*domain.Video, error)
 }
 
 func (repo VideoRepositoryDb) Find(id string) (*domain.Video, error) {
-	var video domain.Video
 
+	var video domain.Video
 	repo.Db.Preload("Jobs").First(&video, "id = ?", id)
 
 	if video.ID == "" {
-		return nil, fmt.Errorf("video does not exists")
+		return nil, fmt.Errorf("video does not exist")
 	}
 
 	return &video, nil
+
 }

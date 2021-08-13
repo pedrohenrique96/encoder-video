@@ -19,7 +19,7 @@ func TestJobRepositoryDbInsert(t *testing.T) {
 	video := domain.NewVideo()
 	video.ID = uuid.NewV4().String()
 	video.FilePath = "path"
-	video.CreateAt = time.Now()
+	video.CreatedAt = time.Now()
 
 	repo := repositories.VideoRepositoryDb{Db: db}
 
@@ -51,7 +51,7 @@ func TestJobRepositoryDbUpdate(t *testing.T) {
 	video := domain.NewVideo()
 	video.ID = uuid.NewV4().String()
 	video.FilePath = "path"
-	video.CreateAt = time.Now()
+	video.CreatedAt = time.Now()
 
 	repo := repositories.VideoRepositoryDb{Db: db}
 

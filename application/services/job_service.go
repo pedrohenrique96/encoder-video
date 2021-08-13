@@ -15,6 +15,10 @@ type JobService struct {
 	VideoService VideoService
 }
 
+func NewJobService() JobService {
+	return JobService{}
+}
+
 func (j *JobService) Start() error {
 	err := j.changeJobStatus("DOWNLOADING")
 

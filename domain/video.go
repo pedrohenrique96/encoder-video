@@ -10,7 +10,7 @@ type Video struct {
 	ID         string    `json:"encoded_video_folder" valid:"uuid" gorm:"type:uuid;primary_key"`
 	ResourseID string    `json:"resource_id" valid:"notnull" gorm:"type:varchar(255)"`
 	FilePath   string    `json:"file_path" valid:"notnull" gorm:"type:varchar(255)"`
-	CreateAt   time.Time `json:"-" valid:"-" `
+	CreatedAt   time.Time `json:"-" valid:"-" `
 	Jobs       []*Job    `json:"-" valid:"-" gorm:"foreignkey:VideoID"`
 }
 

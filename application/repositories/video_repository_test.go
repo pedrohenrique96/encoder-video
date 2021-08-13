@@ -13,16 +13,14 @@ import (
 
 func TestVideoRepositoryDbInsert(t *testing.T) {
 	db := database.NewDbTest()
-
 	defer db.Close()
 
 	video := domain.NewVideo()
 	video.ID = uuid.NewV4().String()
 	video.FilePath = "path"
-	video.CreateAt = time.Now()
+	video.CreatedAt = time.Now()
 
-	repo := repositories.VideoRepositoryDb{Db: db}
-
+	repo := repositories.VideoRepositoryDb{Db:db}
 	repo.Insert(video)
 
 	v, err := repo.Find(video.ID)
